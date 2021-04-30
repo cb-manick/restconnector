@@ -25,7 +25,7 @@ public class RestConnector {
     this.jsonFactory = new JacksonFactory();
   }
 
-  public RestConnectorResponse request(Action action, String json) {
+  public RestConnectorResponse invokeActionOnResource(Action action, String json) {
     JsonHttpContent content = new JsonHttpContent(this.jsonFactory, json);
 
     try {
@@ -93,7 +93,6 @@ public class RestConnector {
     try {
       HttpResponse httpResponse = request.execute();
       return getRestConnectorResponse(httpResponse);
-      /// TODO : get and set headers
     } catch (Exception ex) {
      return getRestConnectorErrorResponse(ex);
     }
