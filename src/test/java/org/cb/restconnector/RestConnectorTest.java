@@ -21,7 +21,7 @@ public class RestConnectorTest {
     EndpointConfig endpointConfig =
         new EndpointConfig("www.example.com", 1000, 1000, Scheme.HTTP);
     RestConnector restConnector = new RestConnector(endpointConfig);
-    final RestConnectorResponse response = restConnector.invoke(Action.GET,"");
+    final RestConnectorResponse response = restConnector.request(Action.GET,"");
     Assert.assertTrue(response.isSuccess());
   }
 }
