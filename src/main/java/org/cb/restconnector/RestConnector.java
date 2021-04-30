@@ -1,10 +1,10 @@
 package org.cb.restconnector;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpContent;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import org.cb.restconnector.config.EndpointConfig;
 
 import java.io.IOException;
@@ -13,19 +13,24 @@ public class RestConnector {
   private final EndpointConfig endpointConfig;
   private final HttpRequestFactory httpRequestFactory;
   private final GenericUrl url;
+  private final JsonFactory jsonFactory;
 
-  /** @param endpointConfig */
-  public RestConnector(final EndpointConfig endpointConfig) {
+
+  /** @param endpointConfig */ RestConnector(final EndpointConfig endpointConfig) {
     this.endpointConfig = endpointConfig;
     this.url = new GenericUrl();
     this.url.setHost(endpointConfig.getHost());
     this.url.setScheme(endpointConfig.getScheme().toString());
     this.httpRequestFactory = new NetHttpTransport().createRequestFactory();
+    this.jsonFactory = new JacksonFactory();
   }
 
-  public RestConnectorResponse invoke(Action action, String rawInput) throws IOException {
+  public RestConnectorResponse invoke(Action action, String json) throws IOException {
+    JsonHttpContent content = new JsonHttpContent(this.jsonFactory,json);
     HttpRequest request = null;
-
+    RestConnectorResponse response = new RestConnectorResponse();
+    try
+    {
     switch (action) {
       case GET:
         request =
@@ -34,42 +39,48 @@ public class RestConnector {
                 .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
                 .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
       case POST:
-        request =
-            httpRequestFactory
-                .buildPostRequest(this.url, rawInput)
-                .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
-                .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
+          request =
+                  httpRequestFactory
+                          .buildPostRequest(this.url, content)
+                  .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
+                  .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
+
         break;
       case PUT:
-        request =
-            httpRequestFactory
-                .buildPatchRequest(this.url, rawInput)
-                .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
-                .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
-        break;
       case PATCH:
-        request =
-            httpRequestFactory
-                .buildPatchRequest(this.url,rawInput)
-                .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
-                .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
+          request =
+                  httpRequestFactory
+                          .buildPatchRequest(this.url,content)
+                  .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
+                  .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
         break;
       case DELETE:
+          request =
+                  httpRequestFactory
+                          .buildDeleteRequest(this.url)
+                          .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
+                          .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
         break;
+        }
+    } catch (IOException e) {
+      response.setSuccess(false);
+      response.setErrorMessage(e.getMessage());
+      return response;
     }
-    RestConnectorResponse response = getResponse(request);
+    response = getResponse(request,response);
+    response.setSuccess(true);
     return response;
   }
 
-  private RestConnectorResponse getResponse(HttpRequest request) {
-    RestConnectorResponse response = new RestConnectorResponse();
+  private RestConnectorResponse getResponse(HttpRequest request, RestConnectorResponse response) {
     try {
-      HttpResponse execute = request.execute();
-      String rawString = execute.parseAsString();
+      HttpResponse httpResponse = request.execute();
+      String rawString = httpResponse.parseAsString();
       response.setRawResponse(rawString);
       response.setSuccess(true);
-      response.setHttpResponseCode(Integer.toString(execute.getStatusCode()));
-      //      HttpHeaders headers = request.execute().getHeaders()
+      response.setHttpResponseCode(Integer.toString(httpResponse.getStatusCode()));
+      HttpHeaders headers = httpResponse.getHeaders();
+      ///TODO : get and set headers
     } catch (Exception ex) {
       response.setSuccess(false);
       response.setErrorMessage(ex.getMessage());
@@ -78,7 +89,4 @@ public class RestConnector {
     return response;
   }
 
-  public RestConnectorResponse invoke(String resource, Action action) {
-    return null;
-  }
 }
