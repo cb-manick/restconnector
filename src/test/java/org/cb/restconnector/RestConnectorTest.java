@@ -19,8 +19,7 @@ public class RestConnectorTest {
   @Test
   public void RestConnectTestConnect() throws IOException {
     EndpointConfig endpointConfig =
-        new EndpointConfig("http://www.example.org", 10, 10, Scheme.HTTP);
-    endpointConfig.setHost("http://www.example.org");
+        new EndpointConfig("www.example.com", 1000, 1000, Scheme.HTTP);
     RestConnector restConnector = new RestConnector(endpointConfig);
     final RestConnectorResponse response = restConnector.invoke(Action.GET,"");
     Assert.assertTrue(response.isSuccess());
