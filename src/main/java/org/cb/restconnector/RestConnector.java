@@ -7,6 +7,8 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import org.cb.restconnector.config.EndpointConfig;
 
+import java.io.IOException;
+
 public class RestConnector {
   private final EndpointConfig endpointConfig;
   private final HttpRequestFactory httpRequestFactory;
@@ -21,17 +23,36 @@ public class RestConnector {
     this.httpRequestFactory = new NetHttpTransport().createRequestFactory();
   }
 
-  public RestConnectorResponse invoke(Action action) {
+  public RestConnectorResponse invoke(Action action, String rawInput) throws IOException {
     HttpRequest request = null;
 
     switch (action) {
       case GET:
-        break;
+        request =
+            httpRequestFactory
+                .buildGetRequest(this.url)
+                .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
+                .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
       case POST:
+        request =
+            httpRequestFactory
+                .buildPostRequest(this.url, rawInput)
+                .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
+                .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
         break;
       case PUT:
+        request =
+            httpRequestFactory
+                .buildPatchRequest(this.url, rawInput)
+                .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
+                .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
         break;
       case PATCH:
+        request =
+            httpRequestFactory
+                .buildPatchRequest(this.url,rawInput)
+                .setConnectTimeout(this.endpointConfig.getConnectTimeoutInSec())
+                .setReadTimeout(this.endpointConfig.getRequestTimeoutInSec());
         break;
       case DELETE:
         break;
