@@ -6,18 +6,21 @@ import org.junit.Test;
 
 public class RestConnectorTest {
 
-    @Test
-    public void RestConnectorCreation() {
-        RestConnector restConnector = new RestConnector(new EndpointConfig());
-        Assert.assertNotNull(restConnector);
-    }
+  @Test
+  public void RestConnectorCreation() {
+    EndpointConfig endpointConfig =
+        new EndpointConfig("http://www.example.org", 10, 10, Scheme.HTTP);
+    RestConnector restConnector = new RestConnector(endpointConfig);
+    Assert.assertNotNull(restConnector);
+  }
 
-    @Test
-    public void RestConnecTestConnect() {
-        RestConnector restConnector = new RestConnector(new EndpointConfig());
-        restConnector.test("www.example.org");
-        Assert.assertNotNull(restConnector);
-    }
-
-
+  @Test
+  public void RestConnectTestConnect() {
+    EndpointConfig endpointConfig =
+        new EndpointConfig("http://www.example.org", 10, 10, Scheme.HTTP);
+    endpointConfig.setHost("http://www.example.org");
+    RestConnector restConnector = new RestConnector(endpointConfig);
+    final RestConnectorResponse response = restConnector.invoke(Action.GET);
+    Assert.assertTrue(response.isSuccess());
+  }
 }

@@ -3,6 +3,8 @@ package org.cb.restconnector;
 import java.util.Map;
 
 public class RestConnectorResponse {
+    private boolean success;
+    private String errorMessage;
     private String rawResponse;
     private String httpResponseCode;
     private Map<String,String> responseHeader;
@@ -11,6 +13,10 @@ public class RestConnectorResponse {
         this.rawResponse = rawOutput;
         this.httpResponseCode = httpResponseCode;
         this.responseHeader = responseHeader;
+    }
+
+    public RestConnectorResponse() {
+
     }
 
     public String getRawResponse() {
@@ -35,5 +41,21 @@ public class RestConnectorResponse {
 
     public void setResponseHeader(Map<String, String> responseHeader) {
         this.responseHeader = responseHeader;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

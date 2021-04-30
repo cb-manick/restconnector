@@ -1,33 +1,50 @@
 package org.cb.restconnector.config;
 
+import org.cb.restconnector.Scheme;
+
 public class EndpointConfig {
-    public String getUrl() {
-        return url;
-    }
+  private String host;
+  private int connectTimeoutInSec;
+  private int requestTimeoutInSec;
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+  public EndpointConfig(String host, int connectTimeoutInSec, int requestTimeoutInSec, Scheme scheme) {
+    this.host = host;
+    this.connectTimeoutInSec = connectTimeoutInSec;
+    this.requestTimeoutInSec = requestTimeoutInSec;
+    this.scheme = scheme;
+  }
 
-    private String url;
+  public Scheme getScheme() {
+    return scheme;
+  }
 
-    public int getConnectTimeoutInSec() {
-        return connectTimeoutInSec;
-    }
+  public void setScheme(Scheme scheme) {
+    this.scheme = scheme;
+  }
 
-    public void setConnectTimeoutInSec(int connectTimeoutInSec) {
-        this.connectTimeoutInSec = connectTimeoutInSec;
-    }
+  private Scheme scheme;
 
-    public int getRequestTimeoutInSec() {
-        return requestTimeoutInSec;
-    }
+  public String getHost() {
+    return host;
+  }
 
-    public void setRequestTimeoutInSec(int requestTimeoutInSec) {
-        this.requestTimeoutInSec = requestTimeoutInSec;
-    }
+  public void setHost(String host) {
+    this.host = host;
+  }
 
-    private int connectTimeoutInSec;
-    private int requestTimeoutInSec;
+  public int getConnectTimeoutInSec() {
+    return connectTimeoutInSec;
+  }
 
+  public void setConnectTimeoutInSec(int connectTimeoutInSec) {
+    this.connectTimeoutInSec = connectTimeoutInSec;
+  }
+
+  public int getRequestTimeoutInSec() {
+    return requestTimeoutInSec;
+  }
+
+  public void setRequestTimeoutInSec(int requestTimeoutInSec) {
+    this.requestTimeoutInSec = requestTimeoutInSec;
+  }
 }
