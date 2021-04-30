@@ -27,8 +27,9 @@ public class RestConnector {
 
   public RestConnectorResponse request(Action action, String json) {
     JsonHttpContent content = new JsonHttpContent(this.jsonFactory, json);
-    HttpRequest request = null;
+
     try {
+      HttpRequest request = null;
       switch (action) {
         case GET:
           request = getGetRequest();
@@ -44,11 +45,12 @@ public class RestConnector {
           request = getDeleteRequest();
           break;
       }
+      RestConnectorResponse restConnectorResponse = makeRequest(request);
+      return restConnectorResponse;
     } catch (IOException e) {
       return getRestConnectorErrorResponse(e);
     }
-    RestConnectorResponse restConnectorResponse = makeRequest(request);
-    return restConnectorResponse;
+
   }
 
   private RestConnectorResponse getRestConnectorErrorResponse(IOException e) {
