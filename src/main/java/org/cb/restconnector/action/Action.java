@@ -1,4 +1,4 @@
-package org.cb.restconnector;
+package org.cb.restconnector.action;
 
 public enum Action {
     GET("get"),

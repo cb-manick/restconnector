@@ -1,5 +1,6 @@
 package org.cb.restconnector;
 
+import org.cb.restconnector.action.Action;
 import org.cb.restconnector.config.EndpointConfig;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class RestConnectorTest {
     EndpointConfig endpointConfig =
         new EndpointConfig("www.example.com", 1000, 1000, Scheme.HTTP);
     RestConnector restConnector = new RestConnector(endpointConfig);
-    final RestConnectorResponse response = restConnector.invokeActionOnResource(Action.GET,"");
+    final RestConnectorResponse response = restConnector.invokeActionOnResource(new RestConnectorRequest(Action.GET, null));
     Assert.assertTrue(response.isSuccess());
   }
 }

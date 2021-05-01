@@ -5,6 +5,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import org.cb.restconnector.action.ActionExecutionStrategyFactory;
+import org.cb.restconnector.action.ActionRestExecutionStrategy;
 import org.cb.restconnector.config.EndpointConfig;
 
 import java.io.IOException;
@@ -25,12 +27,15 @@ public class RestConnector {
     this.jsonFactory = new JacksonFactory();
   }
 
-  public RestConnectorResponse invokeActionOnResource(Action action, String json) {
-    JsonHttpContent content = new JsonHttpContent(this.jsonFactory, json);
+  public RestConnectorResponse invokeActionOnResource(RestConnectorRequest restConnectorRequest) {
+    ActionRestExecutionStrategy restExecutionStrategy =
+        ActionExecutionStrategyFactory.getRestExecutionStrategy(restConnectorRequest.getAction());
+    restExecutionStrategy.invokeAction(restConnectorRequest);
+    JsonHttpContent content = new JsonHttpContent(this.jsonFactory, restConnectorRequest.getJson());
 
     try {
       HttpRequest request = null;
-      switch (action) {
+      switch (restConnectorRequest.getAction()) {
         case GET:
           request = getGetRequest();
           break;
@@ -50,7 +55,6 @@ public class RestConnector {
     } catch (IOException e) {
       return getRestConnectorErrorResponse(e);
     }
-
   }
 
   private RestConnectorResponse getRestConnectorErrorResponse(IOException e) {
@@ -94,12 +98,12 @@ public class RestConnector {
       HttpResponse httpResponse = request.execute();
       return getRestConnectorResponse(httpResponse);
     } catch (Exception ex) {
-     return getRestConnectorErrorResponse(ex);
+      return getRestConnectorErrorResponse(ex);
     }
-
   }
 
-  private RestConnectorResponse getRestConnectorResponse(HttpResponse httpResponse) throws IOException {
+  private RestConnectorResponse getRestConnectorResponse(HttpResponse httpResponse)
+      throws IOException {
     String rawString = httpResponse.parseAsString();
     RestConnectorResponse restConnectorResponse = new RestConnectorResponse();
     restConnectorResponse.setRawResponse(rawString);
