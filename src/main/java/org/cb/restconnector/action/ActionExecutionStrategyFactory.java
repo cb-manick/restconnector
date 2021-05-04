@@ -2,7 +2,7 @@ package org.cb.restconnector.action;
 
 import java.util.HashMap;
 import java.util.Map;
-;
+
 
 public class ActionExecutionStrategyFactory {
   private static Map<Action, ActionRestExecutionStrategy> map = new HashMap<>();
