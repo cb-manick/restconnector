@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 ;
 
-public static class ActionExecutionStrategyFactory {
+public class ActionExecutionStrategyFactory {
   private static Map<Action, ActionRestExecutionStrategy> map = new HashMap<>();
 
   static {

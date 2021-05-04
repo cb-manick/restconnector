@@ -2,12 +2,12 @@ package org.cb.restconnector.config;
 
 import org.cb.restconnector.Scheme;
 
-public class EndpointConfig {
+public class RestEndpointConfig {
   private String host;
   private int connectTimeoutInSec;
   private int requestTimeoutInSec;
 
-  public EndpointConfig(String host, int connectTimeoutInSec, int requestTimeoutInSec, Scheme scheme) {
+  public RestEndpointConfig(String host, int connectTimeoutInSec, int requestTimeoutInSec, Scheme scheme) {
     this.host = host;
     this.connectTimeoutInSec = connectTimeoutInSec;
     this.requestTimeoutInSec = requestTimeoutInSec;
