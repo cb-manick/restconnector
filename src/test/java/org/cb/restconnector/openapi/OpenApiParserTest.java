@@ -35,9 +35,11 @@ public class OpenApiParserTest {
         System.out.println(operation1.getOperationId());
         List<Parameter> parameters = operation1.getParameters();
         if (parameters != null) {
+            parameters.forEach(x->System.out.println(x.getName()));
           System.out.println(parameters.toString());
         }
         RequestBody requestBody = operation1.getRequestBody();
+
         if (requestBody != null) {
           MediaType contentMediaType = requestBody.getContentMediaType("application/json");
           if (contentMediaType != null) {
