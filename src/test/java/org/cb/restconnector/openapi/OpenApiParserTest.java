@@ -1,8 +1,10 @@
 package org.cb.restconnector.openapi;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openapi4j.core.exception.EncodeException;
 import org.openapi4j.core.exception.ResolutionException;
+import org.openapi4j.core.model.OAIContext;
 import org.openapi4j.core.validation.ValidationException;
 import org.openapi4j.parser.OpenApi3Parser;
 import org.openapi4j.parser.model.v3.*;
@@ -13,14 +15,22 @@ import java.util.List;
 import java.util.Map;
 
 public class OpenApiParserTest {
+
+  private final OpenApi3 api = null;
+  @BeforeClass
+  public void testSetup() throws MalformedURLException, ResolutionException, ValidationException {
+    api =   new OpenApi3Parser()
+            .parse(new URL("https://petstore3.swagger.io/api/v3/openapi.json"), false);
+  }
+
   @Test
   public void testOpenApiParser()
       throws MalformedURLException, ResolutionException, ValidationException, EncodeException {
 
-    OpenApi3 api =
-        new OpenApi3Parser()
-            .parse(new URL("https://petstore3.swagger.io/api/v3/openapi.json"), false);
-    // "https://petstore3.swagger.io/api/v3/openapi.json", null, null);
+//    OpenApi3 api =
+//        new OpenApi3Parser()
+//            .parse(new URL("https://petstore3.swagger.io/api/v3/openapi.json"), false);
+//   // "https://petstore3.swagger.io/api/v3/openapi.json", null, null);
 
     Components components = api.getComponents(); // components
 
@@ -36,7 +46,7 @@ public class OpenApiParserTest {
         List<Parameter> parameters = operation1.getParameters();
         if (parameters != null) {
             parameters.forEach(x->System.out.println(x.getName()));
-          System.out.println(parameters.toString());
+        //  System.out.println(parameters.toString());
         }
         RequestBody requestBody = operation1.getRequestBody();
 
@@ -53,6 +63,7 @@ public class OpenApiParserTest {
             }
           }
         }
+
         //  requestBody.toNode();
       }
       System.out.println("---");
@@ -60,5 +71,28 @@ public class OpenApiParserTest {
       //      System.out.println(jsonNode.toPrettyString());
       //      System.out.println("---");
     }
+    }
+
+
+  @Test
+  public void getSecurityRequirements() {
+
+    OAIContext context = api.getContext();
+    List<SecurityRequirement> securityRequirements = api.getSecurityRequirements();
+
+
+
+    for (String path : api.) {
+      System.out.println(path.get);
+    }
+    }
+
   }
+
+    @Test
+    public void getMethodDetails() {
+
+    }
+
+
 }
